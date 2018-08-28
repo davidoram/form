@@ -1,6 +1,13 @@
 {
 	"comment": "",
 	"ignore": "test",
-	"package": [],
+	"package": [
+		{
+			"checksumSHA1": "OH94abBdbmoVqyRqYBfgUT9N494=",
+			"path": "github.com/jessevdk/go-flags",
+			"revision": "1c38ed7ad0cc3d9e66649ac398c30e45f395c4eb",
+			"revisionTime": "2018-03-31T12:42:32Z"
+		}
+	],
 	"rootPath": "github.com/davidoram/form"
 }
