@@ -1,6 +1,6 @@
 # Defaults
 GOOS ?= darwin
-GOARCH ?= $(CURRENT_ARCH)
+GOARCH ?= amd64
 
 build-setup: clean
 	go get -u github.com/kardianos/govendor
@@ -14,7 +14,7 @@ build: build-fsite
 test: test-lib test-fsite
 
 build-fsite:
-	cd cmd/f-site && env GOOS=$(GOOS) GOARCH=$(GOARCH) go build -o ../../bin/f-site-$(GOOS)-$(GOARCH)
+	cd cmd/f-site && env GOOS=$(GOOS) GOARCH=$(GOARCH) govendor build -o ../../bin/f-site-$(GOOS)-$(GOARCH)
 
 test-fsite:
 	cd cmd/f-site go test -v ./..
