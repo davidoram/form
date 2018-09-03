@@ -7,8 +7,10 @@ import (
 
 	"github.com/davidoram/form/lib/formdb"
 
+	"github.com/gorilla/sessions"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/middleware"
 	lslog "github.com/labstack/gommon/log"
 )
@@ -60,7 +62,13 @@ func main() {
 		}
 	})
 	e.Use(middleware.Logger())
+	e.Use(middleware.RequestID())
 	e.Use(middleware.Recover())
+	e.Use(session.Middleware(sessions.NewCookieStore([]byte("secret"))))
+	e.Use(middleware.CORS())
+	e.Use(middleware.CSRF())
+	e.Use(middleware.Secure())
+	e.Use(middleware.Gzip())
 
 	// Routes
 	e.GET("/", hello)

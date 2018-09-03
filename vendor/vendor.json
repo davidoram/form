@@ -45,6 +45,24 @@
 			"revisionTime": "2018-08-23T13:00:44Z"
 		},
 		{
+			"checksumSHA1": "g/V4qrXjUGG9B+e3hB+4NAYJ5Gs=",
+			"path": "github.com/gorilla/context",
+			"revision": "08b5f424b9271eedf6f9f0ce86cb9396ed337a42",
+			"revisionTime": "2016-08-17T18:46:32Z"
+		},
+		{
+			"checksumSHA1": "v7UN77e2H7nOU9Z+iQmGFddysws=",
+			"path": "github.com/gorilla/securecookie",
+			"revision": "3a8eb0de07814569f0bdadffc60dda1668de90bd",
+			"revisionTime": "2018-08-30T18:40:16Z"
+		},
+		{
+			"checksumSHA1": "nB526COHQwGljTcMf+JJP3gc9Ck=",
+			"path": "github.com/gorilla/sessions",
+			"revision": "03b6f63cc43ef9c7240a635a5e22b13180e822b8",
+			"revisionTime": "2018-06-06T15:52:11Z"
+		},
+		{
 			"checksumSHA1": "OH94abBdbmoVqyRqYBfgUT9N494=",
 			"path": "github.com/jessevdk/go-flags",
 			"revision": "1c38ed7ad0cc3d9e66649ac398c30e45f395c4eb",
@@ -67,6 +85,12 @@
 		{
 			"path": "github.com/labstack/echo*3",
 			"revision": ""
+		},
+		{
+			"checksumSHA1": "IEZT7gAtILtOsfyTIZYzZCxjM5I=",
+			"path": "github.com/labstack/echo-contrib/session",
+			"revision": "93dd5f30d5815757ef3cfd307614956c4c59d483",
+			"revisionTime": "2018-03-03T03:40:00Z"
 		},
 		{
 			"checksumSHA1": "644SDuBjJDLqDr+Z4rL/5I/M6kE=",
