@@ -9,8 +9,20 @@
 			"revisionTime": "2016-12-12T21:30:43Z"
 		},
 		{
+			"checksumSHA1": "c4dFBfQ1TiTG3CAp6MpMen/nWXU=",
+			"path": "github.com/GeertJohan/go.rice",
+			"revision": "c02ca9a983da5807ddf7d796784928f5be4afd09",
+			"revisionTime": "2017-04-20T13:57:05Z"
+		},
+		{
 			"checksumSHA1": "xECV8VmnSwtMPugLqB1OAXwOs48=",
 			"path": "github.com/GeertJohan/go.rice/embedded",
+			"revision": "c02ca9a983da5807ddf7d796784928f5be4afd09",
+			"revisionTime": "2017-04-20T13:57:05Z"
+		},
+		{
+			"checksumSHA1": "CL83W+bNo/amSKEhaj4QAozeOSs=",
+			"path": "github.com/GeertJohan/go.rice/rice",
 			"revision": "c02ca9a983da5807ddf7d796784928f5be4afd09",
 			"revisionTime": "2017-04-20T13:57:05Z"
 		},
@@ -155,6 +167,12 @@
 			"path": "github.com/rubenv/sql-migrate/sqlparse",
 			"revision": "3f452fc0ebebbb784fdab91f7bc79a31dcacab5c",
 			"revisionTime": "2018-07-04T11:13:56Z"
+		},
+		{
+			"checksumSHA1": "eDQ6f1EsNf+frcRO/9XukSEchm8=",
+			"path": "github.com/satori/go.uuid",
+			"revision": "36e9d2ebbde5e3f13ab2e25625fd453271d6522e",
+			"revisionTime": "2018-01-03T17:44:51Z"
 		},
 		{
 			"checksumSHA1": "LTOa3BADhwvT0wFCknPueQALm8I=",

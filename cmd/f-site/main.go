@@ -5,6 +5,9 @@ import (
 	"log"
 	"net/http"
 
+	rice "github.com/GeertJohan/go.rice"
+	"github.com/davidoram/form/lib/context"
+	"github.com/davidoram/form/lib/controllers"
 	"github.com/davidoram/form/lib/formdb"
 
 	"github.com/gorilla/sessions"
@@ -57,7 +60,7 @@ func main() {
 	// Middleware
 	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			cc := &FormContext{c, db}
+			cc := &context.FormContext{c, db}
 			return h(cc)
 		}
 	})
@@ -70,8 +73,15 @@ func main() {
 	e.Use(middleware.Secure())
 	e.Use(middleware.Gzip())
 
+	// Access templates via embedded file system
+	box := rice.MustFindBox("templates")
+
+	// Setup templates
+	e.Renderer = controllers.GetTemplateRenderer(box)
+
 	// Routes
 	e.GET("/", hello)
+	e.GET("/builder/new", controllers.NewFormBuilder).Name = "new_form_builder"
 
 	// Start server
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", opts.HttpPort)))
@@ -79,7 +89,7 @@ func main() {
 
 // Handler
 func hello(c echo.Context) error {
-	fc := c.(*FormContext)
+	fc := c.(*context.FormContext)
 	_, err := fc.DB.Exec("select 1")
 	return c.String(http.StatusOK, fmt.Sprintf("Hello, World! %v", err))
 }
