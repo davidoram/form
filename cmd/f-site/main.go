@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"strings"
 
 	rice "github.com/GeertJohan/go.rice"
 	"github.com/davidoram/form/lib/context"
@@ -26,6 +28,8 @@ type CmdOptions struct {
 	DbUser    string `long:"db-user" description:"Database username" required:"true" env:"F_DB_USER"`
 	DbPass    string `long:"db-password" description:"Database password" required:"true" env:"F_DB_PASSWORD"`
 	DBSSLMode string `long:"db-ssl-mode" description:"Database sslmode" default:"prefer" choice:"disable" choice:"allow" choice:"prefer" choice:"require" choice:"verify-ca" choice:"verify-full" required:"false" env:"F_DB_SSLMODE"`
+
+	Migrate string `long:"db-migrate" description:"Database migration operation" default:"none" choice:"none" choice:"up" choice:"down" required:"false" env:"F_DB_MIGRATE"`
 
 	HttpPort int `long:"http-port" description:"HTTP port to run on" required:"true" env:"F_HTTP_PORT"`
 
@@ -50,12 +54,17 @@ func main() {
 		panic(err)
 	}
 
-	e.Logger.Info("Migrating the database")
-	n, err := formdb.Migrate(db)
-	if err != nil {
-		log.Fatal("db migrations failed: ", err)
+	if strings.EqualFold(opts.Migrate, "none") {
+		e.Logger.Infof("Skip database migrations")
+	} else {
+		e.Logger.Infof("Migrating the database: %s", opts.Migrate)
+		n, err := formdb.Migrate(db, opts.Migrate)
+		if err != nil {
+			log.Fatal("db migrations failed: ", err)
+		}
+		e.Logger.Infof("%d migrations applied/removed", n)
+		os.Exit(0)
 	}
-	e.Logger.Infof("%d migrations applied", n)
 
 	// Middleware
 	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {

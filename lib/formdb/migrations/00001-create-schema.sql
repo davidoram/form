@@ -8,18 +8,13 @@ create table base (
 
 create table templates (
 	id serial not null primary key,
-	external_id uuid not null,
-	version int not null,
-	json_schema json not null,
-	unique (external_id, version)
+	json_schema json not null
 ) inherits (base);
 
 create table forms (
 	id serial not null primary key,
-	external_id uuid not null,
 	template_id int null references templates(id) on delete cascade,
-	form_data json not null,
-	unique (external_id)
+	form_data json not null
 ) inherits (base);
 
 -- +migrate Down

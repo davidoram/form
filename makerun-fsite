@@ -1,0 +1,6 @@
+#! /bin/bash
+set -e
+# rebuild prog if necessary
+make build-fsite
+# run prog with some arguments
+./bin/f-site-darwin-amd64 "$@"
