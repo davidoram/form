@@ -89,8 +89,9 @@ func main() {
 	e.Renderer = controllers.GetTemplateRenderer(box)
 
 	// Routes
-	e.GET("/", hello)
-	e.GET("/builder/new", controllers.NewFormBuilder).Name = "new_form_builder"
+	e.GET("/", controllers.Home).Name = "home"
+
+	e.GET("/templates/new", controllers.GetNewTemplate).Name = "templates_new"
 
 	// Start server
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", opts.HttpPort)))

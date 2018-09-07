@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func GetNewTemplate(c echo.Context) error {
+func Home(c echo.Context) error {
 	fc := c.(*context.FormContext)
-	return fc.Render(http.StatusOK, "views/templates/new.gohtml", map[string]interface{}{})
+	return fc.Render(http.StatusOK, "views/home.gohtml", map[string]interface{}{})
 }
