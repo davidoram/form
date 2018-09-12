@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"strings"
 
@@ -66,7 +65,9 @@ func main() {
 		os.Exit(0)
 	}
 
-	// Middleware
+	// -------------------------------
+	//            Middleware
+	//
 	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			cc := &context.FormContext{c, db}
@@ -78,28 +79,26 @@ func main() {
 	e.Use(middleware.Recover())
 	e.Use(session.Middleware(sessions.NewCookieStore([]byte("secret"))))
 	e.Use(middleware.CORS())
-	e.Use(middleware.CSRF())
+	csrfConfig := middleware.DefaultCSRFConfig
+	e.Use(middleware.CSRFWithConfig(csrfConfig))
 	e.Use(middleware.Secure())
 	e.Use(middleware.Gzip())
 
 	// Access templates via embedded file system
-	box := rice.MustFindBox("templates")
+	tbox := rice.MustFindBox("templates")
+	assets := controllers.StaticAssets{Root: "public", Box: rice.MustFindBox("public")}
 
-	// Setup templates
-	e.Renderer = controllers.GetTemplateRenderer(box)
+	// Setup template renderer
+	e.Renderer = controllers.GetTemplateRenderer(tbox, &csrfConfig)
 
-	// Routes
+	// -------------------------------
+	//            Routes
+	//
 	e.GET("/", controllers.Home).Name = "home"
-
-	e.GET("/templates/new", controllers.GetNewTemplate).Name = "templates_new"
+	e.GET("/public/*", assets.GetStaticAssets)
+	e.GET("/templates/new", controllers.GetNewTemplate).Name = "get_new_template"
+	e.POST("/templates/new", controllers.PostNewTemplate).Name = "save_new_template"
 
 	// Start server
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", opts.HttpPort)))
-}
-
-// Handler
-func hello(c echo.Context) error {
-	fc := c.(*context.FormContext)
-	_, err := fc.DB.Exec("select 1")
-	return c.String(http.StatusOK, fmt.Sprintf("Hello, World! %v", err))
 }

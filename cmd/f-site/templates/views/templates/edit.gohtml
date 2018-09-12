@@ -1,0 +1,58 @@
+<html>
+
+<head>
+  <link rel='stylesheet' href='{{ assetUrl "css/bootstrap.min.css" }}'>
+  <link rel='stylesheet' href='{{ assetUrl "css/formio.full.min.css" }}'>
+  <script src='{{ assetUrl "javascript/formio.full.min.js" }}'></script>
+  <script type='text/javascript'>
+    var components = {components: this.formioComponents};
+    window.onload = function () {
+      Formio.builder(document.getElementById('builder'), components);
+
+      document.getElementById("f-save").addEventListener("click", saveForm);
+    };
+    function saveForm() {
+      console.log(JSON.stringify(components));
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", "{{ urlFor "save_new_template" }}", true);
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 1) {
+          console.log("server connection established");
+        }
+        if (this.readyState == 2) {
+          console.log("request received");
+        }
+        if (this.readyState == 3) {
+          console.log("processing request");
+        }
+        if (this.readyState == 4){
+          console.log("request finished and response is ready. status:" + this.status);
+           if (this.status == 200) {
+            console.log("Saved OK");
+           } else {
+            console.log("Failed " + this.responseText);
+           }
+        }
+      };
+      xhttp.setRequestHeader("Content-type", "application/json");
+      xhttp.setRequestHeader("{{ csrfHeader }}", "{{ csrfToken }}");
+      xhttp.send(JSON.stringify(components));
+
+    }
+  </script>
+</head>
+
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+    <ul class="nav navbar-nav">
+      <li><a href="{{ urlFor "home" }}">Home</a></li>
+    </ul>
+  </nav>
+
+  <div id='builder'></div>
+  <button id="f-save" type="submit" class="btn btn-default">Save Form</button>
+
+</body>
+
+</html>

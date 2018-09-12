@@ -1,7 +1,7 @@
 <html>
 
 <head>
-  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='{{ assetUrl "css/bootstrap.min.css" }}'>
 </head>
 
 <body>
@@ -9,7 +9,7 @@
     <div class="container-fluid">
     <ul class="nav navbar-nav">
       <li><a href="{{ urlFor "home" }}">Home</a></li>
-      <li><a href="{{ urlFor "templates_new" }}">New Template</a></li>
+      <li><a href="{{ urlFor "get_new_template" }}">New Template</a></li>
     </ul>
   </nav>
 
