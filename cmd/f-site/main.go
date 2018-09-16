@@ -57,7 +57,7 @@ func main() {
 		e.Logger.Infof("Skip database migrations")
 	} else {
 		e.Logger.Infof("Migrating the database: %s", opts.Migrate)
-		n, err := formdb.Migrate(db, opts.Migrate)
+		n, err := formdb.Migrate(db.DB, opts.Migrate)
 		if err != nil {
 			log.Fatal("db migrations failed: ", err)
 		}
@@ -68,12 +68,7 @@ func main() {
 	// -------------------------------
 	//            Middleware
 	//
-	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			cc := &context.FormContext{c, db}
-			return h(cc)
-		}
-	})
+	e.Use(context.FormContextMiddleware(db)) // MUST be registered first
 	e.Use(middleware.Logger())
 	e.Use(middleware.RequestID())
 	e.Use(middleware.Recover())
