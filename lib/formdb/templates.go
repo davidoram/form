@@ -6,6 +6,29 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// ListTemplates reads the list of all templates
+func ListTemplates(db *sqlx.DB) ([]*models.Template, error) {
+	sql := `SELECT id
+	               ,json_schema
+					FROM   templates`
+	var tpls []*models.Template
+	rows, err := db.Queryx(sql)
+	println("Query")
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		println("Next row ")
+		var tpl models.Template
+		err = rows.StructScan(&tpl)
+		if err != nil {
+			return nil, err
+		}
+		tpls = append(tpls, &tpl)
+	}
+	return tpls, nil
+}
+
 // GetTemplate reads a template by id
 func GetTemplate(db *sqlx.Tx, id int64) (*models.Template, error) {
 	sql := `SELECT id

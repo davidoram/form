@@ -29,5 +29,3 @@ install:
   - make test
   #- make buildalldockers
 
-notifications:
-  slack: seav:ftmrbAp3XnETXDURAWPWJGZc#builds

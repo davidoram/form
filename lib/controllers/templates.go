@@ -11,12 +11,46 @@ import (
 	"github.com/labstack/echo"
 )
 
-func GetNewTemplate(c echo.Context) error {
+// ListTemplates will list the existsing template
+func ListTemplates(c echo.Context) error {
+	fc := c.(*context.FormContext)
+	tmpls, err := formdb.ListTemplates(fc.DB)
+	if err != nil {
+		return err
+	}
+	return fc.Render(http.StatusOK, "views/templates/list.gohtml", map[string]interface{}{"templates": tmpls})
+}
+
+// NewTemplate returns a new template
+func NewTemplate(c echo.Context) error {
 	fc := c.(*context.FormContext)
 	return fc.Render(http.StatusOK, "views/templates/edit.gohtml", map[string]interface{}{})
 }
 
-func PostNewTemplate(c echo.Context) error {
+// CreateTemplate inserts a new Template into the db
+func CreateTemplate(c echo.Context) error {
+	fc := c.(*context.FormContext)
+	b, err := ioutil.ReadAll(c.Request().Body)
+
+	if err != nil {
+		return err
+	}
+	if !isJSON(b) {
+		return errors.New("Body not valid JSON")
+	}
+
+	tx := fc.DB.MustBegin()
+	tmpl, err := formdb.InsertTemplate(tx, string(b))
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+	return fc.Render(http.StatusOK, "views/templates/edit.gohtml", map[string]interface{}{"template": tmpl})
+}
+
+// UpdateTemplate will update an existing template
+func UpdateTemplate(c echo.Context) error {
 	fc := c.(*context.FormContext)
 	b, err := ioutil.ReadAll(c.Request().Body)
 
