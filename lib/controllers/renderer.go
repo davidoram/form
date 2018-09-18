@@ -22,14 +22,11 @@ func GetTemplateRenderer(box *rice.Box, csrfConfig *middleware.CSRFConfig) *Temp
 	}
 }
 
-// RenderContext is passed to all templates
-type RenderContext struct {
-}
-
 // Render renders a template document
+// Inside the template refer to any data passed in as '{{ name }}' etc
+// Also provides functions 'log', 'urlFor', 'csrfHeader', 'csrfToken' and 'assetUrl'
 func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
 
-	ctx := RenderContext{}
 	// // Add global methods if data is a map
 	// if viewContext, isMap := data.(map[string]interface{}); isMap {
 	// 	c.Logger().Info("Added reverse")
@@ -88,7 +85,8 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 		c.Logger().Errorf("Can't parse template: '%s'", name)
 		return err
 	}
-	err = tmplMessage.Execute(w, ctx)
+	c.Logger().Debugf("Template variables: %+v", data)
+	err = tmplMessage.Execute(w, data)
 	if err != nil {
 		c.Logger().Errorf("Error executing template: '%s'. '%+v'", name, err)
 	}

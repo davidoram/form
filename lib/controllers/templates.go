@@ -8,6 +8,7 @@ import (
 
 	"github.com/davidoram/form/lib/context"
 	"github.com/davidoram/form/lib/formdb"
+	"github.com/davidoram/form/lib/models"
 	"github.com/labstack/echo"
 )
 
@@ -18,7 +19,14 @@ func ListTemplates(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return fc.Render(http.StatusOK, "views/templates/list.gohtml", map[string]interface{}{"templates": tmpls})
+
+	// An anonymous struct gives you more type safety than using a Map
+	data := struct {
+		Templates []*models.Template
+	}{
+		tmpls,
+	}
+	return fc.Render(http.StatusOK, "views/templates/list.gohtml", data)
 }
 
 // NewTemplate returns a new template
