@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -33,6 +34,8 @@ type CmdOptions struct {
 	HttpPort int `long:"http-port" description:"HTTP port to run on" required:"true" env:"F_HTTP_PORT"`
 
 	LogLevel int `long:"log-level" descripton:"Logging level, 1=DEBUG, 2=INFO, 3=WARN, 4=ERROR" default:"2" choice:"1" choice:"2" choice:"3" choice:"4"  required:"false" env:"F_LOGLEVEL"`
+
+	PrintRoutes bool `long:"print-routes" descripton:"Print the routes to stdout and exit."  required:"false"`
 }
 
 func main() {
@@ -94,6 +97,19 @@ func main() {
 	e.GET("/templates", controllers.ListTemplates).Name = "list_templates"
 	e.GET("/templates/new", controllers.NewTemplate).Name = "get_new_template"
 	e.POST("/templates/new", controllers.CreateTemplate).Name = "save_new_template"
+	// e.GET("/templates/:id", controllers.OpenTemplate).Name = "open_template"
+	// e.POST("/templates/:id", controllers.UpdateTemplate).Name = "update_template"
+
+	// Print routes to stdout & finish
+	if opts.PrintRoutes {
+		routes, err := json.MarshalIndent(e.Routes(), "", "  ")
+		if err != nil {
+			fmt.Println("Error: %v", err)
+			os.Exit(1)
+		}
+		fmt.Printf("%s\n", routes)
+		os.Exit(0)
+	}
 
 	// Start server
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", opts.HttpPort)))

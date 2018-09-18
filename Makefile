@@ -26,6 +26,9 @@ test-lib:
 run-fsite: build-fsite
 	env GOOS=$(GOOS) GOARCH=$(GOARCH) bin/f-site-$(GOOS)-$(GOARCH)
 
+routes: build-fsite
+	env GOOS=$(GOOS) GOARCH=$(GOARCH) bin/f-site-$(GOOS)-$(GOARCH) --print-routes
+
 refresh-javascript-css-libs:
 	mkdir -p cmd/f-site/public/css/fonts
 	mkdir -p cmd/f-site/public/javascript
