@@ -93,12 +93,12 @@ func main() {
 	//            Routes
 	//
 	e.GET("/", controllers.Home).Name = "home"
-	e.GET("/public/*", assets.GetStaticAssets)
+	e.GET("/public/*", assets.GetStaticAssets).Name = "static"
 	e.GET("/templates", controllers.ListTemplates).Name = "list_templates"
 	e.GET("/templates/new", controllers.NewTemplate).Name = "get_new_template"
 	e.POST("/templates/new", controllers.CreateTemplate).Name = "save_new_template"
-	// e.GET("/templates/:id", controllers.OpenTemplate).Name = "open_template"
-	// e.POST("/templates/:id", controllers.UpdateTemplate).Name = "update_template"
+	e.GET("/templates/:id", controllers.OpenTemplate).Name = "open_template"
+	e.POST("/templates/:id", controllers.UpdateTemplate).Name = "update_template"
 
 	// Print routes to stdout & finish
 	if opts.PrintRoutes {

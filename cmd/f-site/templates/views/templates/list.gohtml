@@ -21,7 +21,7 @@
     <tbody>
       {{range $index, $element := .Templates}}
       <tr>
-        <th>{{ $element.ID }}</th>
+        <th> <a href="{{ urlFor "open_template" $element.ID }}">{{ $element.ID }}</a></th>
         <th>TODO Name</th>
       </tr>
       {{else}}

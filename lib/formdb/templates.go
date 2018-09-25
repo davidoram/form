@@ -7,18 +7,16 @@ import (
 )
 
 // ListTemplates reads the list of all templates
-func ListTemplates(db *sqlx.DB) ([]*models.Template, error) {
+func ListTemplates(db sqlx.Queryer) ([]*models.Template, error) {
 	sql := `SELECT id
 	               ,json_schema
 					FROM   templates`
 	var tpls []*models.Template
 	rows, err := db.Queryx(sql)
-	println("Query")
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
-		println("Next row ")
 		var tpl models.Template
 		err = rows.StructScan(&tpl)
 		if err != nil {
@@ -29,13 +27,22 @@ func ListTemplates(db *sqlx.DB) ([]*models.Template, error) {
 	return tpls, nil
 }
 
+// GetNewTemplate constructs a new models.Template
+func GetNewTemplate(db sqlx.Queryer) (*models.Template, error) {
+	tpl := models.Template{
+		ID:         0,
+		JSONSchema: "{}",
+	}
+	return &tpl, nil
+}
+
 // GetTemplate reads a template by id
-func GetTemplate(db *sqlx.Tx, id int64) (*models.Template, error) {
+func GetTemplate(db sqlx.Queryer, id int64) (*models.Template, error) {
 	sql := `SELECT id
 	               ,json_schema
 					FROM   templates
 					WHERE  id = $1`
-	var tpl models.Template
+	tpl := models.Template{ID: id}
 	err := db.QueryRowx(sql, tpl.ID).StructScan(&tpl)
 	if err != nil {
 		return nil, err
@@ -44,7 +51,7 @@ func GetTemplate(db *sqlx.Tx, id int64) (*models.Template, error) {
 }
 
 // InsertTemplate adds a new template into the database
-func InsertTemplate(db *sqlx.Tx, js string) (*models.Template, error) {
+func InsertTemplate(db sqlx.Queryer, js string) (*models.Template, error) {
 	tpl := models.Template{
 		ID:         0,
 		JSONSchema: js,
@@ -61,7 +68,7 @@ func InsertTemplate(db *sqlx.Tx, js string) (*models.Template, error) {
 						,DEFAULT
 						,$1
 					) RETURNING id`
-	return &tpl, db.QueryRow(sql, js).Scan(&tpl.ID)
+	return &tpl, db.QueryRowx(sql, js).Scan(&tpl.ID)
 }
 
 // func (c *context.FormContext) UpdateTemplate(id int) (*models.Template, error) {

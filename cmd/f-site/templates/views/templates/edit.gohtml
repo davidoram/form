@@ -5,16 +5,28 @@
   <link rel='stylesheet' href='{{ assetUrl "css/formio.full.min.css" }}'>
   <script src='{{ assetUrl "javascript/formio.full.min.js" }}'></script>
   <script type='text/javascript'>
+
+    import Form from 'formiojs/FormBuilder';
+
+    // See https://formio.github.io/formio.js/app/sdk
     var components = {components: this.formioComponents};
     window.onload = function () {
+      var components = "{{ .Template.JSONSchema }}";
       Formio.builder(document.getElementById('builder'), components);
 
       document.getElementById("f-save").addEventListener("click", saveForm);
     };
+
+
     function saveForm() {
       console.log(JSON.stringify(components));
       var xhttp = new XMLHttpRequest();
+      {{ if .Template.IsUnsaved }}
+      xhttp.open("POST", "{{ urlFor "update_template" .Template.ID }}", true);
+      {{ else }}
       xhttp.open("POST", "{{ urlFor "save_new_template" }}", true);
+      {{ end }}
+
       xhttp.onreadystatechange = function() {
         if (this.readyState == 1) {
           console.log("server connection established");

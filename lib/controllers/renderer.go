@@ -54,7 +54,8 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 		// Usage:
 		// 	{{ urlFor "home" }}
 		"urlFor": func(name string, params ...interface{}) string {
-			return c.Echo().Reverse(name, params)
+			c.Logger().Infof("urlFor('%s',%+v)", name, params)
+			return c.Echo().Reverse(name, params...)
 		},
 
 		// The 'assetUrl' function returns the URL for a given file under

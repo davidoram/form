@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -14,12 +15,12 @@ import (
 
 // ListTemplates will list the existsing template
 func ListTemplates(c echo.Context) error {
+	c.Logger().Infof("ListTemplates controller")
 	fc := c.(*context.FormContext)
 	tmpls, err := formdb.ListTemplates(fc.DB)
 	if err != nil {
 		return err
 	}
-
 	// An anonymous struct gives you more type safety than using a Map
 	data := struct {
 		Templates []*models.Template
@@ -29,10 +30,44 @@ func ListTemplates(c echo.Context) error {
 	return fc.Render(http.StatusOK, "views/templates/list.gohtml", data)
 }
 
-// NewTemplate returns a new template
+// NewTemplate opens a new template
 func NewTemplate(c echo.Context) error {
+	c.Logger().Infof("NewTemplate controller")
 	fc := c.(*context.FormContext)
-	return fc.Render(http.StatusOK, "views/templates/edit.gohtml", map[string]interface{}{})
+	tmpl, err := formdb.GetNewTemplate(fc.DB)
+	if err != nil {
+		return err
+	}
+	data := struct {
+		Template *models.Template
+	}{
+		tmpl,
+	}
+	return fc.Render(http.StatusOK, "views/templates/edit.gohtml", data)
+}
+
+// OpenTemplate opens an existing template
+func OpenTemplate(c echo.Context) error {
+	c.Logger().Infof("OpenTemplate controller. params: %+v", c.ParamValues())
+	fc := c.(*context.FormContext)
+	var id int64
+	num, err := fmt.Sscanf(c.Param("id"), "%d", &id)
+	if err != nil {
+		return err
+	}
+	if num != 1 {
+		return fmt.Errorf("Unable to find :id in path")
+	}
+	tmpl, err := formdb.GetTemplate(fc.DB, id)
+	if err != nil {
+		return err
+	}
+	data := struct {
+		Template *models.Template
+	}{
+		tmpl,
+	}
+	return fc.Render(http.StatusOK, "views/templates/edit.gohtml", data)
 }
 
 // CreateTemplate inserts a new Template into the db
