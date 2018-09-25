@@ -1,0 +1,31 @@
+language: go
+
+go:
+  - 1.11
+
+env:
+  - TRAVIS_NODE_VERSION="10"
+  - TARGET_PLATFORM="linux"
+  - TARGET_ARCH="amd64"
+
+sudo: required
+dist: trusty
+
+services:
+  - postgresql
+
+addons:
+  # See https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts.General.DBVersions
+  #
+  postgresql: "10.4"
+
+before_install:
+  - psql -c 'create database form_test;' -U postgres
+  - psql -c 'ALTER SYSTEM SET max_connections = 20;' -U postgres
+
+install:
+  - make build-setup
+  - make build-fsite
+  - make test
+  #- make buildalldockers
+
